@@ -1,0 +1,35 @@
+{
+  "background": {
+    "scripts": [ "js/jquery.js", "js/background.js" ]
+  },
+  "browser_action": {
+    "default_icon": "images/icon.png",
+    "default_popup": "html/index.html"
+  },
+  "content_scripts": [ {
+    "js": [ "js/jquery.js", "js/scrape.js" ],
+    "matches": [
+      "https://www.linkedin.com/recruiter/*",
+      "https://*.linkedin.com/in/*",
+      "https://www.linkedin.com/pub/*",
+      "https://*.linkedin.com/profile/*",
+      "https://angel.co/*",
+      "http://rabota.ua/cv/*"
+    ]
+  }, {
+    "js": [ "js/jquery.js", "js/rapportive.js" ],
+    "matches": [
+      "https://mail.google.com/*",
+      "https://*.linkedin.com/in/*",
+      "https://www.linkedin.com/pub/*",
+      "https://*.linkedin.com/profile/*",
+      "https://angel.co/*"
+    ]
+  } ],
+  "description": "Easily source candidates from a variety of sources",
+  "manifest_version": 2,
+  "name": "Breezy HR for Chrome (UA Edition)",
+  "permissions": [ "activeTab", "https://breezy.hr/" ],
+  "short_name": "Breezy HR (UA Edition)",
+  "version": "1.0"
+}

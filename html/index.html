@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html data-ng-app="ChromeApp" ng-csp="">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" media="all" href="../css/site.css">
+    <base target="_blank">
+</head>
+<body data-ng-controller="ImportViewCtrl">
+
+    <div ng-if="notfound === true">
+        <section class="hero">
+            <i class='fa fa-frown-o'></i>
+            <h1>No Candidate Found</h1>
+        </section>
+    </div>
+
+    <div ng-if="notfound === false">
+        <section class="hero" ng-if="complete">
+            <i class='fa fa-check'></i>
+            <h1>Candidate Imported</h1>
+            <p>It's being processed and should appear shortly.</p>
+        </section>
+
+        <section class="authenticate" ng-if="authenticated && !complete && import && !activeCompany">
+            <h2>Choose a company</h2>
+            <ul class="positions">
+                <li ng-repeat="company in companies" ng-click='selectCompany(company)'>
+                    <h3>{{company.company.name}}</h3>
+                    <small>https://{{company.company.friendly_id}}.breezy.hr/</small>
+                </li>
+            </ul>
+        </section>
+
+        <section class="authenticate" ng-if="authenticated && !complete && import && activeCompany">
+            <form ng-submit='finishImport()'>
+                <h2>Import to which positions?</h2>
+                <p ng-if="activeCompany.positions.length == 0">
+                    You have eligible positions available.
+                </p>
+                <ul class="positions">
+                    <li ng-repeat="position in activeCompany.positions" ng-click='toggle(position)' ng-class='position.enabled ? "enabled" : "disabled"' ng-if='position.is_member || shared.activeCompany.company.is_admin'>
+                        <h3>{{position.name}}</h3>
+                        <small class='fa fa-map-marker' ng-if='position.location.is_remote'> Remote</small>
+                        <small class='fa fa-map-marker' ng-if='!position.location.name && !position.location.is_remote'> No Location</small>
+                        <small class='fa fa-map-marker' ng-if='position.location.name && !position.location.is_remote'> {{position.location.name}}</small>
+                    </li>
+                </ul>
+                <button type="submit" ng-if="enabledPositions > 0">
+                    <i class="fa fa-plus" ng-if="!importing"></i>
+                    <i class="fa fa-spinner fa-spin" ng-if="importing"></i>
+                    Finish Import
+                </button>
+            </form>
+        </section>
+
+        <section class="authenticate" ng-if="!authenticated">
+            <form ng-submit='signin(email, password)'>
+                <h2>Log In</h2>
+                <input class="email" type="email" ng-model='email' placeholder="Email address" ng-required="true" />
+                <input class="password" type="password" ng-model='password'  placeholder="Password" ng-required="true" />
+                <button type="submit">
+                    Log In to Breezy HR
+                </button>
+            </form>
+        </section>
+        <section class="candidate" ng-if="authenticated && !complete && !import && candidate">
+            <form ng-submit='startImport()'>
+                <img class="avatar" src="{{candidate.profile_photo_url}}" ng-if="candidate.profile_photo_url" />
+                <h1>{{candidate.name}}</h1>
+                <button type="submit">
+                    <i class="fa fa-plus"></i>
+                    Import Candidate
+                </button>
+            </form>
+        </section>
+    </div>
+
+    <script src="../js/angular.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>
